@@ -37,6 +37,12 @@ app.get("/", (req, res) => {
     message:
       "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes.",
   });
+  res.send("Hey this is my API running 🥳");
+});
+
+// listen for requests
+app.listen(3000, () => {
+  console.log("Server is listening on port 3000");
 });
 
 app.use(allRoutes);
@@ -46,8 +52,3 @@ app.use(allRoutes);
 // require("./app/routes/note.routes.js")(app);
 // require("./app/routes/user.route.js")(app);
 // require("./app/routes/registeruser.routes.js")(app);
-
-// listen for requests
-app.listen(3000, () => {
-  console.log("Server is listening on port 3000");
-});
