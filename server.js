@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const allRoutes = require("./app/routes/index.js");
 
 const app = express();
-
 app.use(cors());
 
 // parse requests of content-type - application/x-www-form-urlencoded
