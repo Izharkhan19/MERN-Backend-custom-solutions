@@ -139,7 +139,7 @@ exports.findOne = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "Note not Found" + req.params.userId,
+          message: "User not Found" + req.params.userId,
         });
       } else {
         res.send(user);
