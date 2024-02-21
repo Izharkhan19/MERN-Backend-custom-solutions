@@ -1,7 +1,9 @@
+const sendConfirmationEmail = require("../Common/SendEmail.js");
 const RegisterUser = require("../models/registeruser.model.js");
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
+
   if (!req.body.userName) {
     return res.status(400).send({
       message: "userName can't be empty",
@@ -18,23 +20,49 @@ exports.create = (req, res) => {
     });
   }
 
-  // Create a User
-  const userReg = new RegisterUser({
-    userName: req.body.userName,
-    email: req.body.email,
-    password: req.body.password,
+  let RegisteredUser = await RegisterUser.find();
+
+  let result = false;
+  RegisteredUser.map((itm) => {
+    if (itm.email === req.body.email) {
+      console.log(itm.email);
+      result = true;
+    } else {
+      console.log(itm.email);
+      result = false;
+    }
   });
 
-  userReg
-    .save()
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some thing wrong.",
-      });
+  if (result === false) {
+    // Create a User
+    const userReg = new RegisterUser({
+      userName: req.body.userName,
+      email: req.body.email,
+      password: req.body.password,
     });
+
+    userReg
+      .save()
+      .then((data) => {
+        // Send Email Confirmation for successfull registration.
+        sendConfirmationEmail(
+          req.body.email,
+          req.body.userName,
+          req.body.password,
+          "register"
+        );
+        res.status(200).send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Some thing wrong.",
+        });
+      });
+  } else {
+    res.status(409).send({
+      message: "This email is already registered.",
+    });
+  }
 };
 
 exports.findAll = (req, res) => {
